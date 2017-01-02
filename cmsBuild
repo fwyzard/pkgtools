@@ -344,10 +344,12 @@ def downloadGit(source, dest, options):
   makedirs(exportpath)
   command = format("cd %(exportpath)s &&"
                    "git init &&"
+                   "git remote add origin %(protocol)s%(gitroot)s &&"
                    "git pull --tags %(protocol)s%(gitroot)s refs/heads/%(branch)s &&"
                    "git reset --hard %(tag)s &&"
+                   "git submodule update --init --recursive &&"
                    "find . ! -path '%(filter)s' -delete &&"
-                   "rm -rf .git .gitattributes .gitignore", **args)
+                   "rm -rf .git .gitattributes .gitignore .gitmodules", **args)
   error, output = getstatusoutput(command % args)
   if error:
     log("Error while downloading sources from %s using git.\n\n"
